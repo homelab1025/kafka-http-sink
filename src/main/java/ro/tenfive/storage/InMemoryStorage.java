@@ -22,9 +22,9 @@ public class InMemoryStorage implements MessageStorage {
 
     @Override
     public void store(Message message) {
-        messagesById.put(message.id(), message);
+        messagesById.put(message.msgId(), message);
         queue.offer(message);
-        LOG.debug("Stored message with id: {}", message.id());
+        LOG.debug("Stored message with id: {}", message.msgId());
     }
 
     @Override
@@ -52,12 +52,12 @@ public class InMemoryStorage implements MessageStorage {
     @Override
     public void markAsFailed(Message message) {
         Message updatedMessage = message.withIncrementedRetry();
-        messagesById.put(message.id(), updatedMessage);
+        messagesById.put(message.msgId(), updatedMessage);
         // Remove and re-add to update the queue
         queue.remove(message);
         queue.offer(updatedMessage);
         LOG.warn("Marked message as failed, retry count: {}, id: {}",
-                 updatedMessage.retryCount(), message.id());
+                 updatedMessage.retryCount(), message.msgId());
     }
 
     @Override

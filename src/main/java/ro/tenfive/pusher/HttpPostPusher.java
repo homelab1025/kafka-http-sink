@@ -36,15 +36,15 @@ public class HttpPostPusher implements MessagePusher {
             HttpResponse<String> response = httpClient.toBlocking().exchange(request, String.class);
 
             if (response.status().getCode() >= 200 && response.status().getCode() < 300) {
-                LOG.debug("Successfully pushed message with id: {}", message.id());
+                LOG.debug("Successfully pushed message with id: {}", message.msgId());
                 return true;
             } else {
                 LOG.warn("Failed to push message with id: {}, status: {}",
-                         message.id(), response.status());
+                         message.msgId(), response.status());
                 return false;
             }
         } catch (Exception e) {
-            LOG.error("Error pushing message with id: {}", message.id(), e);
+            LOG.error("Error pushing message with id: {}", message.msgId(), e);
             return false;
         }
     }

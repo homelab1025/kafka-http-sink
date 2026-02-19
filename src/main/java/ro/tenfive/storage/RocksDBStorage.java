@@ -51,10 +51,10 @@ public class RocksDBStorage implements MessageStorage {
     @Override
     public void store(Message message) {
         try {
-            byte[] key = message.id().getBytes(StandardCharsets.UTF_8);
+            byte[] key = message.msgId().getBytes(StandardCharsets.UTF_8);
             byte[] value = objectMapper.writeValueAsBytes(message);
             db.put(key, value);
-            LOG.debug("Stored message with id: {}", message.id());
+            LOG.debug("Stored message with id: {}", message.msgId());
         } catch (RocksDBException | IOException e) {
             LOG.error("Failed to store message", e);
             throw new RuntimeException("Failed to store message", e);
@@ -98,7 +98,7 @@ public class RocksDBStorage implements MessageStorage {
         Message updatedMessage = message.withIncrementedRetry();
         store(updatedMessage);
         LOG.warn("Marked message as failed, retry count: {}, id: {}",
-                 updatedMessage.retryCount(), message.id());
+                 updatedMessage.retryCount(), message.msgId());
     }
 
     @Override

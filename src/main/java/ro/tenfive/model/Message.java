@@ -6,16 +6,17 @@ import java.time.Instant;
 
 @Serdeable
 public record Message(
-    String id,
+    String msgId,
+    int partnerId,
     String payload,
     Instant receivedAt,
     int retryCount
 ) {
-    public Message(String id, String payload) {
-        this(id, payload, Instant.now(), 0);
+    public Message(String msgId, int partnerId, String payload) {
+        this(msgId, partnerId, payload, Instant.now(), 0);
     }
 
     public Message withIncrementedRetry() {
-        return new Message(id, payload, receivedAt, retryCount + 1);
+        return new Message(msgId, partnerId, payload, receivedAt, retryCount + 1);
     }
 }

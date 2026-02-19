@@ -73,7 +73,7 @@ public class FoundationDBStorage implements MessageStorage {
     @Override
     public void store(Message message) {
         try {
-            byte[] key = messageSpace.pack(Tuple.from(message.id()));
+            byte[] key = messageSpace.pack(Tuple.from(message.msgId()));
             byte[] value = objectMapper.writeValueAsBytes(message);
 
             db.run(tr -> {
@@ -81,7 +81,7 @@ public class FoundationDBStorage implements MessageStorage {
                 return null;
             });
 
-            LOG.debug("Stored message with id: {}", message.id());
+            LOG.debug("Stored message with id: {}", message.msgId());
         } catch (IOException e) {
             LOG.error("Failed to store message", e);
             throw new RuntimeException("Failed to store message", e);
@@ -141,7 +141,7 @@ public class FoundationDBStorage implements MessageStorage {
         Message updatedMessage = message.withIncrementedRetry();
         store(updatedMessage);
         LOG.warn("Marked message as failed, retry count: {}, id: {}",
-                 updatedMessage.retryCount(), message.id());
+                 updatedMessage.retryCount(), message.msgId());
     }
 
     @Override

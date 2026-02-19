@@ -67,7 +67,7 @@ public class PusherService {
         boolean success = pusher.pushBatch(messages);
 
         if (success) {
-            messages.forEach(message -> storage.delete(message.id()));
+            messages.forEach(message -> storage.delete(message.msgId()));
             LOG.info("Successfully pushed batch of {} messages", messages.size());
         } else {
             handleFailedMessages(messages);
@@ -85,8 +85,8 @@ public class PusherService {
         boolean success = pusher.push(message);
 
         if (success) {
-            storage.delete(message.id());
-            LOG.debug("Successfully pushed message with id: {}", message.id());
+            storage.delete(message.msgId());
+            LOG.debug("Successfully pushed message with id: {}", message.msgId());
         } else {
             handleFailedMessages(List.of(message));
         }
@@ -98,12 +98,12 @@ public class PusherService {
         for (Message message : messages) {
             if (message.retryCount() >= maxAttempts) {
                 LOG.error("Message with id: {} exceeded max retry attempts, removing",
-                          message.id());
-                storage.delete(message.id());
+                          message.msgId());
+                storage.delete(message.msgId());
             } else {
                 storage.markAsFailed(message);
                 LOG.warn("Message with id: {} failed, will retry. Attempt: {}/{}",
-                         message.id(), message.retryCount() + 1, maxAttempts);
+                         message.msgId(), message.retryCount() + 1, maxAttempts);
             }
         }
     }
