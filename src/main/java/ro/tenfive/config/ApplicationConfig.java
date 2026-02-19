@@ -6,7 +6,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 public class ApplicationConfig {
 
     private Storage storage = new Storage();
-    private Delivery delivery = new Delivery();
+    private boolean asyncDelivery = false;
     private Batching batching = new Batching();
     private Retry retry = new Retry();
 
@@ -18,12 +18,12 @@ public class ApplicationConfig {
         this.storage = storage;
     }
 
-    public Delivery getDelivery() {
-        return delivery;
+    public boolean isAsyncDelivery() {
+        return asyncDelivery;
     }
 
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
+    public void setAsyncDelivery(boolean asyncDelivery) {
+        this.asyncDelivery = asyncDelivery;
     }
 
     public Batching getBatching() {
@@ -77,22 +77,9 @@ public class ApplicationConfig {
         }
     }
 
-    @ConfigurationProperties("delivery")
-    public static class Delivery {
-        private boolean guaranteed = false;
-
-        public boolean isGuaranteed() {
-            return guaranteed;
-        }
-
-        public void setGuaranteed(boolean guaranteed) {
-            this.guaranteed = guaranteed;
-        }
-    }
-
     @ConfigurationProperties("batching")
     public static class Batching {
-        private boolean enabled = false;
+        private boolean enabled = true;
         private int size = 100;
         private long timeoutMs = 5000;
 

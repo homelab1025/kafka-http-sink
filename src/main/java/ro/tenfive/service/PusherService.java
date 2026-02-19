@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Singleton
-@Requires(property = "kafka.sink.pusher.enabled", value = "true", defaultValue = "true")
+@Requires(property = "kafka.sink.async-delivery", value = "true")
 public class PusherService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PusherService.class);
